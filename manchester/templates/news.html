@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}News | Manchester United{% endblock %}
+{% block content %}
+<section class="page-header"><p class="eyebrow gold">Inside United</p><h1>CLUB NEWS</h1></section>
+<section class="section"><form method="get" class="search-bar"><i class="fa-solid fa-magnifying-glass"></i><input type="search" name="q" value="{{ query }}" placeholder="Search United news" aria-label="Search news"><button class="btn btn-red" type="submit">Search</button></form><div class="filter-bar"><a class="{% if not category %}active{% endif %}" href="{% url 'news' %}">All</a>{% for item in categories %}<a class="{% if category == item %}active{% endif %}" href="?category={{ item|urlencode }}">{{ item }}</a>{% endfor %}</div>
+<div class="news-grid news-page-grid">{% for article in articles %}<article class="news-card reveal"><a href="{{ article.get_absolute_url }}" class="news-image"><img src="{% if article.image %}{{ article.image.url }}{% elif article.image_url %}{{ article.image_url }}{% else %}https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1000&q=85{% endif %}" alt="{{ article.title }}" loading="lazy"></a><div class="news-body"><span>{{ article.category }} · {{ article.published_at|date:"j M Y" }}</span><h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3><p>{{ article.summary }}</p></div></article>{% empty %}<div class="empty-state full"><h2>No stories found</h2><p>Try a different search or category.</p></div>{% endfor %}</div></section>
+{% endblock %}

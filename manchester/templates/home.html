@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Manchester United | Official Fan Concept{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content reveal">
+    <p class="eyebrow">EST. 1878</p>
+    <h1>THE RED<br><em>DEVILS</em></h1>
+    <p>The Theatre of Dreams. One badge. One history. One United.</p>
+    <div class="hero-actions"><a class="btn btn-light" href="{% url 'history' %}">Explore the club <i class="fa-solid fa-arrow-right"></i></a><a class="btn btn-outline" href="{% url 'news' %}">Latest news</a></div>
+  </div>
+  <div class="hero-score reveal">
+    {% for match in recent_matches %}
+      <span>Full time</span><strong>MAN UTD {{ match.united_score|default:"-" }}</strong><b>–</b><strong>{{ match.opponent_score|default:"-" }} {{ match.opponent }}</strong>
+    {% empty %}<span>Next at Old Trafford</span><strong>MANCHESTER UNITED</strong>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section fixtures-strip">
+  <div class="section-heading"><div><p class="eyebrow red">Match centre</p><h2>Coming up</h2></div><a class="text-link" href="{% url 'matches' %}">All fixtures <i class="fa-solid fa-arrow-right"></i></a></div>
+  <div class="fixture-grid">
+  {% for match in upcoming_matches %}
+    <article class="fixture-card">
+      <div class="fixture-meta"><span>{{ match.competition.name }}</span><span>{{ match.date|date:"D j M" }} · {{ match.date|time:"H:i" }}</span></div>
+      <div class="teams"><div><span class="mini-crest">{% if match.venue == 'home' %}MU{% else %}{{ match.opponent_badge|default:"OPP" }}{% endif %}</span><strong>{% if match.venue == 'home' %}Manchester United{% else %}{{ match.opponent }}{% endif %}</strong></div><b>VS</b><div><span class="mini-crest">{% if match.venue == 'away' %}MU{% else %}{{ match.opponent_badge|default:"OPP" }}{% endif %}</span><strong>{% if match.venue == 'away' %}Manchester United{% else %}{{ match.opponent }}{% endif %}</strong></div></div>
+      <p><i class="fa-solid fa-location-dot"></i> {{ match.stadium }}</p>
+    </article>
+  {% empty %}<p class="empty-state">Fixtures will appear here when they are added in Admin.</p>{% endfor %}
+  </div>
+</section>
+
+<section class="section news-section">
+  <div class="section-heading"><div><p class="eyebrow red">Inside United</p><h2>Latest stories</h2></div><a class="text-link" href="{% url 'news' %}">View all news <i class="fa-solid fa-arrow-right"></i></a></div>
+  <div class="news-grid">
+  {% for article in articles %}
+    <article class="news-card {% if forloop.first %}news-feature{% endif %} reveal">
+      <a href="{{ article.get_absolute_url }}" class="news-image">
+        <img src="{% if article.image %}{{ article.image.url }}{% elif article.image_url %}{{ article.image_url }}{% else %}https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1200&q=85{% endif %}" alt="{{ article.title }}" loading="lazy">
+      </a>
+      <div class="news-body"><span>{{ article.category }} · {{ article.published_at|date:"j M Y" }}</span><h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3><p>{{ article.summary }}</p></div>
+    </article>
+  {% empty %}<p class="empty-state">No stories published yet.</p>{% endfor %}
+  </div>
+</section>
+
+<section class="players-section section">
+  <div class="section-heading light"><div><p class="eyebrow gold">The squad</p><h2>First team</h2></div><a class="text-link" href="{% url 'players' %}">View squad <i class="fa-solid fa-arrow-right"></i></a></div>
+  <div class="player-grid">
+  {% for player in featured_players %}
+    <a class="player-card reveal" href="{{ player.get_absolute_url }}">
+      <img src="{% if player.image %}{{ player.image.url }}{% elif player.image_url %}{{ player.image_url }}{% else %}https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=800&q=85{% endif %}" alt="{{ player.name }}" loading="lazy">
+      <div class="player-number">{{ player.number }}</div><div class="player-info"><p>{{ player.position }}</p><h3>{{ player.name }}</h3></div>
+    </a>
+  {% empty %}<p class="empty-state dark-empty">Player profiles will appear here after adding them in Admin.</p>{% endfor %}
+  </div>
+</section>
+
+<section class="section club-split">
+  <div class="club-image reveal"><img src="https://images.unsplash.com/photo-1553778263-73a83bab9b0c?auto=format&fit=crop&w=1200&q=85" alt="Football stadium atmosphere" loading="lazy"><div class="badge-stat"><strong>145</strong><span>Years of history</span></div></div>
+  <div class="club-copy reveal"><p class="eyebrow red">Our identity</p><h2>MORE THAN A CLUB</h2><p>Founded in 1878, Manchester United has forged a legacy of courage, entertainment and unforgettable moments at the heart of English football.</p><a class="btn btn-red" href="{% url 'history' %}">Discover our history</a></div>
+</section>
+
+<section class="section standings-preview">
+  <div class="section-heading"><div><p class="eyebrow red">Premier League</p><h2>Table preview</h2></div><a class="text-link" href="{% url 'standings' %}">Full standings <i class="fa-solid fa-arrow-right"></i></a></div>
+  <div class="table-wrap"><table><thead><tr><th>Pos</th><th>Club</th><th>Pl</th><th>GD</th><th>Pts</th></tr></thead><tbody>{% for row in standings %}<tr class="{% if row.club == 'Manchester United' %}united-row{% endif %}"><td>{{ row.position }}</td><td><span class="table-crest">{{ row.crest }}</span><strong>{{ row.club }}</strong></td><td>{{ row.played }}</td><td>{{ row.goal_difference }}</td><td><strong>{{ row.points }}</strong></td></tr>{% empty %}<tr><td colspan="5">Sample standings are available after database setup.</td></tr>{% endfor %}</tbody></table></div>
+  <p class="sample-note">Sample data only — not a live league feed.</p>
+</section>
+
+<section class="newsletter">
+  <div><p class="eyebrow gold">Stay connected</p><h2>UNITED IN YOUR INBOX</h2><p>Club news, match updates and exclusive stories.</p></div>
+  <form method="post" action="{% url 'home' %}" class="newsletter-form">
+    {% csrf_token %}<label class="sr-only" for="newsletter-email">Email address</label><input id="newsletter-email" type="email" name="newsletter_email" placeholder="Enter your email address" required><button class="btn btn-light" type="submit">Subscribe <i class="fa-solid fa-arrow-right"></i></button>
+  </form>
+</section>
+{% endblock %}

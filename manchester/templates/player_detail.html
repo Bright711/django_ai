@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{{ player.name }} | Manchester United{% endblock %}
+{% block content %}
+<section class="player-hero"><div class="player-portrait"><img src="{% if player.image %}{{ player.image.url }}{% elif player.image_url %}{{ player.image_url }}{% else %}https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=900&q=85{% endif %}" alt="{{ player.name }}"></div><div class="player-hero-copy"><p class="eyebrow red">{{ player.position }}</p><span class="big-number">{{ player.number }}</span><h1>{{ player.name }}</h1><dl><div><dt>Nationality</dt><dd>{{ player.nationality }}</dd></div><div><dt>Position</dt><dd>{{ player.position }}</dd></div><div><dt>Date of birth</dt><dd>{{ player.date_of_birth|date:"j M Y"|default:"—" }}</dd></div></dl></div></section>
+<section class="section player-stats"><div class="stat"><strong>{{ player.appearances }}</strong><span>Appearances</span></div><div class="stat"><strong>{{ player.goals }}</strong><span>Goals</span></div><div class="stat"><strong>{{ player.assists }}</strong><span>Assists</span></div></section>
+{% if player.biography %}<section class="section bio"><p class="eyebrow red">Player profile</p><h2>{{ player.name }}</h2><p>{{ player.biography }}</p></section>{% endif %}
+{% endblock %}

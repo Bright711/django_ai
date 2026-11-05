@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}First Team | Manchester United{% endblock %}
+{% block content %}
+<section class="page-header"><p class="eyebrow gold">The squad</p><h1>FIRST TEAM</h1></section>
+<section class="section">
+ <div class="filter-bar" role="group" aria-label="Filter players"><a class="{% if not position %}active{% endif %}" href="{% url 'players' %}">All players</a>{% for value,label in players.model.POSITION_CHOICES|default:"" %}<span></span>{% endfor %}<a class="{% if position == 'Goalkeepers' %}active{% endif %}" href="?position=Goalkeepers">Goalkeepers</a><a class="{% if position == 'Defenders' %}active{% endif %}" href="?position=Defenders">Defenders</a><a class="{% if position == 'Midfielders' %}active{% endif %}" href="?position=Midfielders">Midfielders</a><a class="{% if position == 'Forwards' %}active{% endif %}" href="?position=Forwards">Forwards</a></div>
+ <div class="squad-grid">{% for player in players %}<a class="player-card reveal" href="{{ player.get_absolute_url }}"><img src="{% if player.image %}{{ player.image.url }}{% elif player.image_url %}{{ player.image_url }}{% else %}https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=800&q=85{% endif %}" alt="{{ player.name }}" loading="lazy"><div class="player-number">{{ player.number }}</div><div class="player-info"><p>{{ player.position }} · {{ player.nationality }}</p><h3>{{ player.name }}</h3></div></a>{% empty %}<div class="empty-state full"><h2>No players found</h2><p>Try another position or add player profiles in Django Admin.</p></div>{% endfor %}</div>
+</section>
+{% endblock %}
